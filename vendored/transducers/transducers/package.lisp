@@ -20,10 +20,10 @@
   ;; --- Reducers -- ;;
   (:export #:cons #:snoc #:vector #:string #:hash-table
            #:count #:average #:median
-           #:anyp #:allp #:any #:all
+           #:any? #:anyp #:allp #:any? #:any #:all
            #:first #:last
            #:fold #:max #:min #:find
-           #:for-each)
+           #:for #:for-each)
   ;; --- Sources --- ;;
   (:export #:ints #:cycle #:repeat #:random #:shuffle
            #:plist #:reversed)
@@ -35,17 +35,20 @@
            #:retry-item)
   ;; --- Utilities --- ;;
   (:export #:comp #:const
-           #:reduced #:make-reduced #:reduced-p #:reduced-val)
+           #:reduced #:make-reduced #:reduced? #:reduced-p #:reduced-val)
   (:documentation "Ergonomic, efficient data processing."))
 
 (in-package :transducers)
 
 ;; --- Types --- ;;
 
-(defstruct reduced
+(defstruct (reduced (:predicate reduced?))
   "A wrapper that signals that reduction has completed."
   val)
 
 (defun reduced (item)
   "Wrap a value to signal that reduction has completed."
   (make-reduced :val item))
+
+(defmacro reduced-p (item)
+  `(reduced? ,item))
