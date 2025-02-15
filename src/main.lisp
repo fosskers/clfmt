@@ -1,4 +1,3 @@
-
 (defpackage clfmt
   (:use :cl)
   (:local-nicknames (#:t #:transducers))
@@ -28,14 +27,6 @@ pair is also passed through."
             (let ((res (funcall reducer result last)))
               (funcall reducer res)))))))
 
-(defun for (f)
-  "Reducer: Call some function on every item to be reduced, and yield a final nil."
-  (lambda (&optional (acc nil a?) (input nil i?))
-    (declare (ignore acc))
-    (cond ((and a? i?) (funcall f input))
-          ((and a? (not i?)) nil)
-          (t nil))))
-
 (defun reformat ()
   "Transducer: The composed logic for reformatting a stream of lines."
   (t:comp (t:map (lambda (line) (string-right-trim +trim+ line)))
@@ -58,12 +49,7 @@ pair is also passed through."
 
 (defun main ()
   (cond ((= 2 (length ext:*command-args*))
-         (clfmt/reformat (for (lambda (item) (format t "~a~%" item)))
+         (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
                          (pathname (nth 1 ext:*command-args*))))
         (t (format t "Try harder!~%")
            (ext:quit 1))))
-
-;; (foo) 1
-;; 2
-;; 3
-;; (bar)
