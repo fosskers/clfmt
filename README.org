@@ -1,0 +1,27 @@
+#+title: clfmt
+
+=clfmt= is a tool that lightly refactors your Common Lisp code.
+
+It mainly aims to reduce extraneous whitespace and newlines, and avoids "being a
+hero", leaving parenthesis management and sexp alignment up to the editor.
+Staying simple keeps =clfmt= performant and nimble, compiling to a neat 200kb
+executable.
+
+* Table of Contents :TOC_5_gh:noexport:
+- [[#installation][Installation]]
+  - [[#from-source][From Source]]
+- [[#editor-integration][Editor Integration]]
+- [[#usage][Usage]]
+
+* Installation
+
+** From Source
+
+=clfmt= requires ECL to build.
+
+#+begin_example
+ecl --load build.lisp
+#+end_example
+
+* Editor Integration
+* Usage
