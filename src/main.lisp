@@ -43,12 +43,26 @@ pair is also passed through."
 #++
 (clfmt/reformat #'t:cons #p"test.txt")
 
+(defun temp-file (orig)
+  "Generate a temporary file name based on some original."
+  (p:add-extension orig "CLFMT"))
+
+#++
+(temp-file "/home/colin/code/foo.lisp")
+
 (defun clfmt/in-place (path)
   "Reformat a file in-place, overwriting the original."
   (labels ((recurse (paths)
              (unless (null paths)
-               (format t "~a~%" (car paths))
-               (recurse (cdr paths)))))
+               (let* ((orig (car paths))
+                      (temp (temp-file orig)))
+                 (with-open-file (stream temp
+                                         :direction :output
+                                         :if-exists :supersede
+                                         :if-does-not-exist :create)
+                   (clfmt/reformat (t:for (lambda (line) (format stream "~a~%" line))) orig)
+                   (rename-file temp orig :if-exists :supersede)
+                   (recurse (cdr paths)))))))
     (let ((checked (probe-file path)))
       (cond ((null checked)
              (format t "Path not found.~%")
@@ -84,4 +98,3 @@ Flags:
            (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item))) *standard-input*))
           (t (ext:process-command-args :rules +args+)))
     (ext:quit 0)))
-
