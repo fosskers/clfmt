@@ -32,8 +32,7 @@ pair is also passed through."
   (t:comp (t:map (lambda (line) (string-right-trim +trim+ line)))
           (t:drop-while #'empty?)
           (t:window 2)
-          (t:filter (lambda (pair) (not (and (empty? (car pair))
-                                             (empty? (cadr pair))))))
+          (t:filter (lambda (pair) (not (and (empty? (car pair)) (empty? (cadr pair))))))
           (smart-car)))
 
 (defun clfmt/reformat (reducer source)
@@ -41,15 +40,19 @@ pair is also passed through."
   (t:transduce (reformat) reducer source))
 
 #++
-(clfmt/reformat #'t:cons #p"src/main.lisp")
+(clfmt/reformat #'t:cons #p"test.txt")
 
 #++
 (defconstant +args+
   '(("")))
 
 (defun main ()
-  (cond ((= 2 (length ext:*command-args*))
-         (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
-                         (pathname (nth 1 ext:*command-args*))))
-        (t (format t "Try harder!~%")
-           (ext:quit 1))))
+  (let ((args (length ext:*command-args*)))
+    (cond ((= 2 args)
+           (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
+                           (pathname (nth 1 ext:*command-args*))))
+          ((= 1 args)
+           (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
+                           *standard-input*))
+          (t (format t "Try harder!~%")
+             (ext:quit 1)))))
