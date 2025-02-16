@@ -3,15 +3,17 @@
 =clfmt= is a tool that lightly refactors your Common Lisp code.
 
 It mainly aims to reduce extraneous whitespace and newlines, and avoids "being a
-hero", leaving parenthesis management and sexp alignment up to the editor.
-Staying simple keeps =clfmt= performant and nimble, compiling to a neat 200kb
-executable.
+hero", leaving parenthesis management and sexp alignment to the editor.
+Staying simple keeps =clfmt= performant and nimble, compiling to a small executable.
 
 * Table of Contents :TOC_5_gh:noexport:
 - [[#installation][Installation]]
   - [[#from-source][From Source]]
 - [[#editor-integration][Editor Integration]]
 - [[#usage][Usage]]
+  - [[#format-a-file][Format a File]]
+  - [[#format-from-stdin][Format from STDIN]]
+  - [[#format-files-in-place][Format Files in-place]]
 
 * Installation
 
@@ -25,3 +27,34 @@ ecl --load build.lisp
 
 * Editor Integration
 * Usage
+** Format a File
+
+Just pass =clfmt= a file:
+
+#+begin_example
+clfmt foo.lisp
+#+end_example
+
+And its reformatted form will print to STDOUT.
+
+** Format from STDIN
+
+Some editor integrations want to feed input via STDIN. That's equivalent to:
+
+#+begin_example
+cat foo.lisp | clfmt
+#+end_example
+
+** Format Files in-place
+
+The =-i= flag will directly overwrite a given file:
+
+#+begin_example
+clfmt -i foo.lisp
+#+end_example
+
+You can reformat all files in a directory too:
+
+#+begin_example
+clfmt -i src/
+#+end_example
