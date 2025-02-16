@@ -1,0 +1,16 @@
+
+
+(defpackage clfmt
+  (:use :cl)
+  (:local-nicknames (#:t #:transducers))
+  (:export #:main)
+  (:documentation "Lightly reformat your Common Lisp code."))
+
+(in-package :clfmt)
+
+
+
+
+
+#-ecl
+(error "CLFMT can only be compiled with ECL.")
