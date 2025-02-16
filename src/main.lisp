@@ -1,6 +1,7 @@
 (defpackage clfmt
   (:use :cl)
-  (:local-nicknames (#:t #:transducers))
+  (:local-nicknames (#:t #:transducers)
+                    (#:p #:filepaths))
   (:export #:main)
   (:documentation "Lightly reformat your Common Lisp code."))
 
@@ -44,9 +45,19 @@ pair is also passed through."
 
 (defun clfmt/in-place (path)
   "Reformat a file in-place, overwriting the original."
-  (format t "~a~%" path))
+  (labels ((recurse (paths)
+             (unless (null paths)
+               (format t "~a~%" (car paths))
+               (recurse (cdr paths)))))
+    (let ((checked (probe-file path)))
+      (cond ((null checked)
+             (format t "Path not found.~%")
+             (ext:quit 1))
+            ((p:directory? checked)
+             (recurse (directory (p:join checked "*.lisp"))))
+            (t (recurse (list checked)))))))
 
-(defconstant +help+
+(defparameter +help+
   "clfmt - Lightly reformat your Common Lisp code
 
 Usage:
@@ -58,7 +69,7 @@ Flags:
   --help        - Display this help message
   --version     - Display the current version of clfmt")
 
-(defconstant +args+
+(defparameter +args+
   '((("--help" "-h") 0 (princ +help+))
     ("--version" 0 (format t "0.1.0~%"))
     (("--inplace" "-i") 1 (clfmt/in-place 1))
@@ -73,3 +84,4 @@ Flags:
            (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item))) *standard-input*))
           (t (ext:process-command-args :rules +args+)))
     (ext:quit 0)))
+
