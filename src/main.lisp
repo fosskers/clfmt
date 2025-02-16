@@ -42,17 +42,34 @@ pair is also passed through."
 #++
 (clfmt/reformat #'t:cons #p"test.txt")
 
-#++
+(defun clfmt/in-place (path)
+  "Reformat a file in-place, overwriting the original."
+  (format t "~a~%" path))
+
+(defconstant +help+
+  "clfmt - Lightly reformat your Common Lisp code
+
+Usage:
+  clfmt <PATH> - Print reformatted Lisp code of a given file to STDOUT
+  clfmt        - Accept input from STDIN
+
+Flags:
+  -i, --inplace - Overwrite the input file
+  --help        - Display this help message
+  --version     - Display the current version of clfmt")
+
 (defconstant +args+
-  '(("")))
+  '((("--help" "-h") 0 (princ +help+))
+    ("--version" 0 (format t "0.1.0~%"))
+    (("--inplace" "-i") 1 (clfmt/in-place 1))
+    ("*DEFAULT*" 1 (clfmt/reformat
+                    (t:for (lambda (item) (format t "~a~%" item)))
+                    (pathname (car 1))) :stop)))
 
 (defun main ()
-  (let ((args (length ext:*command-args*)))
-    (cond ((= 2 args)
-           (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
-                           (pathname (nth 1 ext:*command-args*))))
-          ((= 1 args)
-           (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item)))
-                           *standard-input*))
-          (t (format t "Try harder!~%")
-             (ext:quit 1)))))
+  (let ((ext:*lisp-init-file-list* nil)
+        (ext:*help-message* +help+))
+    (cond ((= 1 (length ext:*command-args*))
+           (clfmt/reformat (t:for (lambda (item) (format t "~a~%" item))) *standard-input*))
+          (t (ext:process-command-args :rules +args+)))
+    (ext:quit 0)))
