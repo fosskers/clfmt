@@ -9,6 +9,8 @@ Staying simple keeps =clfmt= performant and nimble, compiling to a small executa
 * Table of Contents :TOC_5_gh:noexport:
 - [[#installation][Installation]]
   - [[#from-source][From Source]]
+  - [[#linux][Linux]]
+    - [[#arch][Arch]]
 - [[#editor-integration][Editor Integration]]
   - [[#emacs-apheleia][Emacs (Apheleia)]]
     - [[#doom-emacs][Doom Emacs]]
@@ -25,6 +27,16 @@ Staying simple keeps =clfmt= performant and nimble, compiling to a small executa
 
 #+begin_example
 ecl --load build.lisp
+#+end_example
+
+** Linux
+
+*** Arch
+
+=clfmt= is [[https://aur.archlinux.org/packages/clfmt][available on the AUR]] and can be installed with tools like [[https://github.com/fosskers/aura][Aura]]:
+
+#+begin_example
+aura -A clfmt
 #+end_example
 
 * Editor Integration
