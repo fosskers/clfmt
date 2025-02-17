@@ -10,6 +10,8 @@ Staying simple keeps =clfmt= performant and nimble, compiling to a small executa
 - [[#installation][Installation]]
   - [[#from-source][From Source]]
 - [[#editor-integration][Editor Integration]]
+  - [[#emacs-apheleia][Emacs (Apheleia)]]
+    - [[#doom-emacs][Doom Emacs]]
 - [[#usage][Usage]]
   - [[#format-a-file][Format a File]]
   - [[#format-from-stdin][Format from STDIN]]
@@ -26,6 +28,35 @@ ecl --load build.lisp
 #+end_example
 
 * Editor Integration
+
+** Emacs (Apheleia)
+
+In general, it should be enough to add:
+
+#+begin_src emacs-lisp
+(add-to-list 'apheleia-formatters '(clfmt . ("clfmt")))
+(add-to-list 'apheleia-mode-alist '(lisp-mode . (lisp-indent clfmt)))
+#+end_src
+
+Provided that =apheleia= has already been loaded and those lists exist.
+
+*** Doom Emacs
+
+Due to how =set-formatter!= is used by Doom internally, we must:
+
+#+begin_src emacs-lisp
+(after! sly
+  (after! apheleia
+    (assq-delete-all 'lisp-mode apheleia-mode-alist)
+    (add-to-list 'apheleia-mode-alist '(lisp-mode . (lisp-indent clfmt)))))
+
+(after! apheleia-formatters
+  (add-to-list 'apheleia-formatters '(clfmt . ("clfmt"))))
+#+end_src
+
+Then, upon saving a Common Lisp buffer, you will get both automatic alignment
+and whitespace clearing.
+
 * Usage
 ** Format a File
 
