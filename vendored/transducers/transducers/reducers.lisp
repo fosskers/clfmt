@@ -106,14 +106,6 @@ The elements are sorted once before the median is extracted.
 #+nil
 (transduce (filter #'evenp) #'average '(1 3 5))
 
-(defmacro any (pred)
-  "Deprecated: Use `any?'."
-  (warn "`any' is deprecated; use `any?' instead.")
-  `(anyp ,pred))
-
-(defmacro anyp (pred)
-  `(any? ,pred))
-
 (declaim (ftype (function ((function (t) *)) *) any?))
 (defun any? (pred)
   "Reducer: Yield t if any element in the transduction satisfies PRED.
@@ -130,14 +122,6 @@ Short-circuits the transduction as soon as the condition is met."
 (transduce #'pass (any? #'evenp) '(1 3 5 7 9))
 #+nil
 (transduce #'pass (any? #'evenp) '(1 3 5 2 7 9))
-
-(defmacro all (pred)
-  "Deprecated: Use `all?'."
-  (warn "`all' is deprecated; use `all?' instead.")
-  `(allp ,pred))
-
-(defmacro allp (pred)
-  `(all? ,pred))
 
 (declaim (ftype (function ((function (t) *)) *) all?))
 (defun all? (pred)
@@ -293,3 +277,20 @@ final T."
 
 #++
 (transduce #'pass (for (lambda (n) (format t "~a~%" n))) #(1 2 3 4))
+
+(defun quantities (test)
+  "Reducer: Count the occurrences of every item in the transduction, given some
+equality predicate."
+  (lambda (&optional (acc nil a?) (input nil i?))
+    (cond ((and a? i?)
+           (let ((count (gethash input acc)))
+             (cond (count (incf (gethash input acc))
+                          acc)
+                   (t (setf (gethash input acc) 1)
+                      acc))))
+          ((and a? (not i?)) acc)
+          (t (make-hash-table :size 32 :test test)))))
+
+#+nil
+(transduce #'pass (quantities #'eql) '(1 1 2 1 3 4 5 4 3 2 1))
+

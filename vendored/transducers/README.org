@@ -38,7 +38,7 @@ evenly-lengthed lines./
 #+RESULTS:
 : 10696
 
-Looking for Transducers in other Lisps? Check out the [[https://codeberg.org/fosskers/transducers.el][Emacs Lisp]] and [[https://git.sr.ht/~fosskers/transducers.fnl][Fennel]] implementations!
+Looking for Transducers in other Lisps? Check out the [[https://github.com/fosskers/transducers.el][Emacs Lisp]] and [[https://github.com/fosskers/transducers.fnl][Fennel]] implementations!
 
 * Table of Contents :TOC_5_gh:noexport:
 - [[#compatibility][Compatibility]]
@@ -62,7 +62,7 @@ Looking for Transducers in other Lisps? Check out the [[https://codeberg.org/fos
     - [[#from-csv-into-csv][from-csv, into-csv]]
   - [[#reducers][Reducers]]
     - [[#cons-snoc-vector-string-hash-table][cons, snoc, vector, string, hash-table]]
-    - [[#count-average-median][count, average, median]]
+    - [[#count-average-median-quantities][count, average, median, quantities]]
     - [[#any-all][any?, all?]]
     - [[#first-last-find][first, last, find]]
     - [[#fold][fold]]
@@ -107,7 +107,7 @@ Looking for Transducers in other Lisps? Check out the [[https://codeberg.org/fos
 | ABCL      | ✅        | ❌     | [[https://github.com/armedbear/abcl/issues/675][No TCO]] in recursive =labels= |
 | CCL       | ✅        | ✅     |                            |
 | [[https://gitlab.com/gnu-clisp/clisp][Clisp]]     | ✅        | -      | Supports TCO but not [[https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3][PLN]]   |
-| Allegro   | ✅        | -      |                            |
+| Allegro   | ✅        | ✅     |                            |
 | LispWorks | ✅        | -      |                            |
 
 [[https://wiki.archlinux.org/title/Common_Lisp#Historical][Historical implementations]] are not considered.
@@ -651,7 +651,7 @@ Collect a stream of key-value cons pairs into a hash table.
 #+RESULTS:
 : #<COMMON-LISP:HASH-TABLE :TEST EQUAL :COUNT 3 {1004E83BF3}>
 
-*** count, average, median
+*** count, average, median, quantities
 
 Count the number of elements that made it through the transduction.
 
@@ -684,6 +684,17 @@ median is extracted.
 
 #+RESULTS:
 : 1
+
+Count the occurrences of every item in the transduction, given some equality
+predicate.
+
+#+begin_src lisp :exports both
+(in-package :transducers)
+(transduce #'pass (quantities #'eql) '(1 1 1 0 2 4 1 4 9))
+#+end_src
+
+#+RESULTS:
+: #<COMMON-LISP:HASH-TABLE :TEST EQL :COUNT 5 {10094FE823}>
 
 *** any?, all?
 

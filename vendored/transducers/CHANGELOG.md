@@ -1,5 +1,15 @@
 # Transducers
 
+### Unreleased
+
+#### Added
+
+- Reducer: `quantities` for counting unique occurrences of streamed items.
+
+#### Fixed
+
+- A forgotten `all?` export.
+
 ### 1.4.0 (2025-02-15)
 
 #### Added

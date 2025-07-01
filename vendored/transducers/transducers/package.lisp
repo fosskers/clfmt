@@ -19,8 +19,8 @@
   (:export #:branch #:inject #:split)
   ;; --- Reducers -- ;;
   (:export #:cons #:snoc #:vector #:string #:hash-table
-           #:count #:average #:median
-           #:any? #:anyp #:allp #:any? #:any #:all
+           #:count #:average #:median #:quantities
+           #:any? #:all? #:anyp #:allp #:any #:all
            #:first #:last
            #:fold #:max #:min #:find
            #:for #:for-each)
@@ -49,6 +49,3 @@
 (defun reduced (item)
   "Wrap a value to signal that reduction has completed."
   (make-reduced :val item))
-
-(defmacro reduced-p (item)
-  `(reduced? ,item))
