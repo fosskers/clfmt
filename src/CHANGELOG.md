@@ -1,6 +1,8 @@
 # clfmt
 
-## Unreleased
+## 0.1.1 (2025-07-01)
+
+Happy Canada Day!
 
 #### Fixed
 
