@@ -12,29 +12,18 @@
 
 (defconstant +trim+ #(#\space #\newline))
 
+(declaim (ftype (function (string) boolean) empty?))
 (defun empty? (seq)
   (zerop (length seq)))
-
-(defun smart-car ()
-  "Transducer: Act like `(map #'car)', except that the final `cadr' of the final
-pair is also passed through."
-  (let ((last nil))
-    (lambda (reducer)
-      (lambda (result &optional (input nil i-p))
-        (if i-p
-            (let ((res (funcall reducer result (car input))))
-              (setf last (cadr input))
-              res)
-            (let ((res (funcall reducer result last)))
-              (funcall reducer res)))))))
 
 (defun reformat ()
   "Transducer: The composed logic for reformatting a stream of lines."
   (t:comp (t:map (lambda (line) (string-right-trim +trim+ line)))
           (t:drop-while #'empty?)
-          (t:window 2)
-          (t:filter (lambda (pair) (not (and (empty? (car pair)) (empty? (cadr pair))))))
-          (smart-car)))
+          (t:group-by #'empty?)
+          (t:map (lambda (list) (cond ((empty? (car list)) '(""))
+                                      (t list))))
+          #'t:concatenate))
 
 (defun clfmt/reformat (reducer source)
   "From some SOURCE that yields lines, read those lines and apply simple reformatting."
