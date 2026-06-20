@@ -1,5 +1,9 @@
 # clfmt
 
+## 0.1.2 (2026-06-21)
+
+Bumped dependencies for better performance.
+
 ## 0.1.1 (2025-07-01)
 
 Happy Canada Day!

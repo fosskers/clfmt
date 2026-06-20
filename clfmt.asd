@@ -1,5 +1,5 @@
 (defsystem :clfmt
-  :version "0.1.1"
+  :version "0.1.2"
   :author "Colin Woodbury <colin@fosskers.ca>"
   :license "MPL-2.0"
   :homepage "https://github.com/fosskers/clfmt"

@@ -74,7 +74,7 @@ Flags:
 
 (defparameter +args+
   '((("--help" "-h") 0 (princ +help+))
-    ("--version" 0 (format t "0.1.1~%"))
+    ("--version" 0 (format t "0.1.2~%"))
     (("--inplace" "-i") 1 (clfmt/in-place 1))
     ("*DEFAULT*" 1 (clfmt/reformat
                     (t:for (lambda (item) (format t "~a~%" item)))
